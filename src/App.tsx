@@ -29,7 +29,6 @@ function App() {
           Count is {count}
         </button>
       </section>
-
       <div className="ticks"></div>
 
       <section id="next-steps">
