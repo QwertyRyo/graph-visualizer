@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- the same social network as test_graph_1.gv, in graphml -->
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <key id="d0" for="node" attr.name="age" attr.type="int"/>
+  <key id="d1" for="edge" attr.name="label" attr.type="string"/>
+  <graph id="SocialNetwork" edgedefault="undirected">
+    <node id="Alice"><data key="d0">25</data></node>
+    <node id="Bob"><data key="d0">30</data></node>
+    <node id="Charlie"><data key="d0">28</data></node>
+    <node id="David"><data key="d0">35</data></node>
+    <edge source="Alice" target="Bob"><data key="d1">Friend</data></edge>
+    <edge source="Alice" target="Charlie"><data key="d1">Colleague</data></edge>
+    <edge source="Bob" target="Charlie"><data key="d1">Friend</data></edge>
+    <edge source="Bob" target="David"><data key="d1">Family</data></edge>
+    <edge source="Charlie" target="David"><data key="d1">Colleague</data></edge>
+  </graph>
+</graphml>

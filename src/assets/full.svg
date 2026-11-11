@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="150 0 500 500" width="100%" height="100%">
+  <defs>
+    <rect id="bg" width="800" height="500" fill="#FFFFFF" />
+  </defs>
+
+
+  <!-- EDGES (Fully Connected K6 Graph - 15 Edges) -->
+  <g stroke="#000000" stroke-width="15" fill="none" stroke-linecap="round">
+    <!-- Node 0 (400, 100) connections -->
+    <path d="M 400 100 L 530 175" />
+    <path d="M 400 100 L 530 325" />
+    <path d="M 400 100 L 400 400" />
+    <path d="M 400 100 L 270 325" />
+    <path d="M 400 100 L 270 175" />
+
+    <!-- Node 1 (530, 175) remaining connections -->
+    <path d="M 530 175 L 530 325" />
+    <path d="M 530 175 L 400 400" />
+    <path d="M 530 175 L 270 325" />
+    <path d="M 530 175 L 270 175" />
+
+    <!-- Node 2 (530, 325) remaining connections -->
+    <path d="M 530 325 L 400 400" />
+    <path d="M 530 325 L 270 325" />
+    <path d="M 530 325 L 270 175" />
+
+    <!-- Node 3 (400, 400) remaining connections -->
+    <path d="M 400 400 L 270 325" />
+    <path d="M 400 400 L 270 175" />
+
+    <!-- Node 4 (270, 325) remaining connection -->
+    <path d="M 270 325 L 270 175" />
+  </g>
+
+  <!-- NODES (6 Nodes arranged in a regular hexagon) -->
+  <g fill="#FFFFFF" stroke="#000000" stroke-width="20">
+    <circle cx="400" cy="100" r="22" />
+    <circle cx="530" cy="175" r="22" />
+    <circle cx="530" cy="325" r="22" />
+    <circle cx="400" cy="400" r="22" />
+    <circle cx="270" cy="325" r="22" />
+    <circle cx="270" cy="175" r="22" />
+  </g>
+</svg>

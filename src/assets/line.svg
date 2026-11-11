@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="150 0 500 500" width="100%" height="100%">
+  <defs>
+    <rect id="bg" width="800" height="500" fill="#FFFFFF" />
+  </defs>
+
+
+  <!-- CONNECTIONS -->
+  <g stroke="#000000" stroke-width="25" fill="none" stroke-linecap="round">
+    <path d="M 250 250 L 550 250" />
+  </g>
+
+  <!-- NODES -->
+  <g fill="#FFFFFF" stroke="#000000" stroke-width="20">
+    <circle cx="250" cy="250" r="24" />
+    <circle cx="400" cy="250" r="24" />
+    <circle cx="550" cy="250" r="24" />
+  </g>
+</svg>

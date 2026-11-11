@@ -1,0 +1,39 @@
+
+graph SocialNetwork {
+
+    // Graph settings
+    graph [
+        label="Sample Social Network",
+        labelloc="top",
+        fontsize=20,
+        bgcolor="white"
+    ];
+
+    // Node settings
+    node [
+        shape=ellipse,
+        style=filled,
+        fillcolor=lightblue,
+        fontname="Arial"
+    ];
+
+    // Edge settings
+    edge [
+        color=gray,
+        fontname="Arial",
+        fontsize=10
+    ];
+
+    // Nodes
+    Alice   [label="Alice\nAge: 25"];
+    Bob     [label="Bob\nAge: 30"];
+    Charlie [label="Charlie\nAge: 28"];
+    David   [label="David\nAge: 35"];
+
+    // Connections
+    Alice -- Bob     [label="Friend"];
+    Alice -- Charlie [label="Colleague"];
+    Bob -- Charlie   [label="Friend"];
+    Bob -- David     [label="Family"];
+    Charlie -- David [label="Colleague"];
+}

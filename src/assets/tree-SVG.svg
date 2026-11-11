@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="150 0 500 500" width="100%" height="100%">
+  <defs>
+    <!-- Solid Background -->
+    <rect id="bg" width="800" height="500" fill="#FFFFFF" />
+  </defs>
+
+
+  <!-- CONNECTIONS -->
+  <g stroke="#000000" stroke-width="25" fill="none" stroke-linecap="round">
+    <!-- Layer 1 to Layer 2 -->
+    <path d="M 400 90 L 250 230" />
+    <path d="M 400 90 L 550 230" />
+
+    <!-- Layer 2 to Layer 3 (Left Branch) -->
+    <path d="M 250 230 L 180 370" />
+    <path d="M 250 230 L 320 370" />
+
+    <!-- Layer 2 to Layer 3 (Right Branch) -->
+    <path d="M 550 230 L 480 370" />
+    <path d="M 550 230 L 620 370" />
+  </g>
+
+  <!-- NODES -->
+
+  <!-- LAYER 1 (1 Node) -->
+  <g transform="translate(400, 90)">
+    <circle r="28" fill="#FFFFFF" stroke="#000000" stroke-width="20" />
+  </g>
+
+  <!-- LAYER 2 (2 Nodes) -->
+  <g transform="translate(250, 230)">
+    <circle r="24" fill="#FFFFFF" stroke="#000000" stroke-width="20" />
+  </g>
+  <g transform="translate(550, 230)">
+    <circle r="24" fill="#FFFFFF" stroke="#000000" stroke-width="20" />
+  </g>
+
+  <!-- LAYER 3 (4 Nodes) -->
+  <g transform="translate(180, 370)">
+    <circle r="20" fill="#FFFFFF" stroke="#000000" stroke-width="20" />
+  </g>
+  <g transform="translate(320, 370)">
+    <circle r="20" fill="#FFFFFF" stroke="#000000" stroke-width="20" />
+  </g>
+  <g transform="translate(480, 370)">
+    <circle r="20" fill="#FFFFFF" stroke="#000000" stroke-width="20" />
+  </g>
+  <g transform="translate(620, 370)">
+    <circle r="20" fill="#FFFFFF" stroke="#000000" stroke-width="20" />
+  </g>
+</svg>

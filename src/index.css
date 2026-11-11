@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@theme {
+  --color-accent: #ea580c;
+  --color-accent-strong: #c2410c;
+  --color-accent-bright: #fb923c;
+  --color-accent-tint: #ffedd5;
+  --color-accent-soft: #fff7ed;
+  --color-danger: #dc2626;
+  --color-danger-strong: #b91c1c;
+  --color-ink: #0f172a;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+  }
+
+  input,
+  textarea,
+  select {
+    text-transform: none;
+  }
+
+  input[type="checkbox"] {
+    accent-color: var(--color-accent);
+  }
+}
