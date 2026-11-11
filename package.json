@@ -11,7 +11,8 @@
     "preview": "vite preview",
     "test": "playwright test",
     "test:e2e": "playwright test --project=e2e",
-    "test:unit": "playwright test --project=unit"
+    "test:unit": "playwright test --project=unit",
+    "test:rules": "firebase emulators:exec --project demo-graph-visualizer --only firestore \"playwright test --project=rules\""
   },
   "dependencies": {
     "@formkit/auto-animate": "0.10.0",
@@ -28,6 +29,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@firebase/rules-unit-testing": "6.0.0",
     "@playwright/test": "1.58",
     "@tailwindcss/vite": "^4.3.4",
     "@types/cytoscape-edgehandles": "^4.0.5",

@@ -1,6 +1,8 @@
 import { create } from "zustand";
 
-type Alert = { title: string; message: string };
+// with confirm set, the dialog shows Cancel and a button that runs onConfirm
+type Confirm = { label: string; onConfirm: () => void; danger?: boolean };
+type Alert = { title: string; message: string; confirm?: Confirm };
 
 type AlertState = {
   alert: Alert | null;
@@ -15,3 +17,6 @@ export const useAlertStore = create<AlertState>()((set) => ({
 }));
 
 export const showAlert = (title: string, message: string) => useAlertStore.getState().showAlert(title, message);
+
+export const showConfirm = (title: string, message: string, label: string, onConfirm: () => void, danger = false) =>
+  useAlertStore.setState({ alert: { title, message, confirm: { label, onConfirm, danger } } });

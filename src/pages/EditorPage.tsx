@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { emptyGraph } from "../domain/graph/schema";
 import { DataView } from "../editor/data/DataView";
-import { AlertDialog } from "../editor/dialog/AlertDialog";
 import { DATA_VIEWS, type DataViewId } from "../editor/data/dataViews";
 import { loadDraft, startDraftAutosave } from "../editor/persistence/draft";
 import { GraphCanvas } from "../editor/canvas/GraphCanvas";
@@ -20,7 +19,7 @@ export function EditorPage() {
 
   useEffect(() => {
     const draft = loadDraft();
-    useEditorStore.getState().load(draft?.doc ?? emptyGraph(), draft?.title ?? "Untitled graph");
+    useEditorStore.getState().load(draft?.doc ?? emptyGraph(), draft?.title ?? "Untitled graph", draft ?? undefined);
     return startDraftAutosave();
   }, []);
 
@@ -31,7 +30,6 @@ export function EditorPage() {
 
   return (
     <div className="relative h-full overflow-hidden">
-      <AlertDialog />
       <div className="absolute inset-0">
         <GraphCanvas />
       </div>

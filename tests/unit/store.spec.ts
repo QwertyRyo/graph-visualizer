@@ -18,6 +18,41 @@ test.describe("editor store", () => {
     expect(store().dirty).toBe(true);
   });
 
+  test("markSaved records the graph id and clears dirty", () => {
+    add();
+    const { doc, title } = store();
+    store().markSaved("g1", { doc, title });
+    expect(store().graphId).toBe("g1");
+    expect(store().dirty).toBe(false);
+  });
+
+  test("edits made during a save stay unsaved", () => {
+    add();
+    const { doc, title } = store();
+    add();
+    store().markSaved("g1", { doc, title });
+    expect(store().dirty).toBe(true);
+  });
+
+  test("load forgets the saved graph unless told otherwise", () => {
+    store().markSaved("g1", { doc: store().doc, title: store().title });
+    store().load(emptyGraph(), "fresh");
+    expect(store().graphId).toBeNull();
+    store().load(emptyGraph(), "restored", { graphId: "g2", dirty: true });
+    expect(store().graphId).toBe("g2");
+    expect(store().dirty).toBe(true);
+  });
+
+  test("newGraph clears the canvas and forgets the saved graph", () => {
+    add();
+    store().markSaved("g1", { doc: store().doc, title: store().title });
+    store().newGraph();
+    expect(store().doc.nodes).toHaveLength(0);
+    expect(store().graphId).toBeNull();
+    expect(store().title).toBe("Untitled graph");
+    expect(store().past).toHaveLength(0);
+  });
+
   test("ignores edits that return the same doc", () => {
     store().commit((d) => d);
     expect(store().past).toHaveLength(0);

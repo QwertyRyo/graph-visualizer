@@ -14,10 +14,11 @@ import { insertPreset } from "../presets";
 import { MENU_DATA_VIEWS, type DataViewId } from "../data/dataViews";
 import { exportGraph, GraphSONImportError, readGraphFile, type ExportFormat } from "../persistence/graphFile";
 import { GraphMLImportError } from "../persistence/graphml";
+import { saveToCloud, useSaveStatus } from "../persistence/cloudSave";
 import { useCanvasRegistry } from "../canvas/canvasRegistry";
 import { runLayout } from "../canvas/layouts";
 import { Menu } from "./Menu";
-import { showAlert } from "../dialog/alertStore";
+import { showAlert, showConfirm } from "../dialog/alertStore";
 import { isLocked, lockHint, useEditorStore } from "../store";
 import { floatingButton, floatingCard } from "./styles";
 
@@ -78,6 +79,17 @@ const PRESET_ICONS: Record<string, string> = {
 };
 const PRESET_ITEMS = PRESETS.map((p) => ({ id: p.id, label: p.label, icon: PRESET_ICONS[p.id] ?? trashUrl }));
 
+// asks first unless the canvas is empty, since a new graph can't be undone
+function confirmNewGraph() {
+  const { doc, graphId, dirty, newGraph } = useEditorStore.getState();
+  if (doc.nodes.length === 0) return newGraph();
+  const message =
+    graphId && !dirty
+      ? "This clears the canvas. Your saved graph stays in My graphs."
+      : "This clears the canvas, and your unsaved changes will be lost.";
+  showConfirm("Start a new graph?", message, "New graph", newGraph);
+}
+
 type Props = { dataView: DataViewId | null; onDataView: (view: DataViewId) => void };
 
 export function TopBar({ dataView, onDataView }: Props) {
@@ -90,6 +102,8 @@ export function TopBar({ dataView, onDataView }: Props) {
   const locked = useEditorStore(isLocked);
   const algorithm = useEditorStore((s) => s.run?.traversal.algorithm ?? null);
   const hasNodes = useEditorStore((s) => s.doc.nodes.length > 0);
+  const saved = useEditorStore((s) => s.graphId !== null && !s.dirty);
+  const saving = useSaveStatus((s) => s.saving);
   const { setTitle, undo, redo, replaceDoc, commit, toggleFilter, startRun } = useEditorStore.getState();
   const fileInput = useRef<HTMLInputElement>(null);
   const lockedHint = useEditorStore(lockHint);
@@ -109,7 +123,7 @@ export function TopBar({ dataView, onDataView }: Props) {
       if (cy) runLayout(cy, "grid", false);
       if (title) setTitle(title);
     } catch (err) {
-      if (err instanceof GraphSONImportError) showAlert("Can't import file", "GraphSON files can't be imported yet.");
+      if (err instanceof GraphSONImportError) showAlert("Can't import file", "GraphSON files are temporarily unsupported.");
       else if (err instanceof GraphMLImportError) showAlert("Can't import file", `That GraphML file couldn't be read: ${err.message}.`);
       else showAlert("Can't import file", "That file isn't a valid graph.");
     }
@@ -179,8 +193,15 @@ export function TopBar({ dataView, onDataView }: Props) {
         buttonClassName={floatingButton}
         onSelect={(format) => exportGraph(useEditorStore.getState().doc, title, format)}
       />
-      <Button title="Sign-in and saving arrive in Part D" disabled onClick={() => {}}>
-        Save
+      <Button title="Start a blank graph; the next Save adds it to My graphs" disabled={saving} onClick={confirmNewGraph}>
+        New graph
+      </Button>
+      <Button
+        title={saving ? undefined : saved ? "No unsaved changes" : "Save to your account (⌘S)"}
+        disabled={saving || saved}
+        onClick={() => void saveToCloud()}
+      >
+        {saving ? "Saving…" : saved ? "Saved" : "Save"}
       </Button>
       <input
         ref={fileInput}

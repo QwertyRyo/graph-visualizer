@@ -9,7 +9,7 @@ export type LabelRequest = {
   height: number;
 };
 
-const MAX_SLIDE = 0.55;
+const MAX_SLIDE = 0.45;
 const SLIDE_STEP = 0.05;
 const DISTANCE_WEIGHT = 0.01;
 const CURVE_SAMPLES = 24;

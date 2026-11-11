@@ -16,6 +16,7 @@ const noSelection = (): Selection => ({ nodes: [], edges: [] });
 type EditorState = {
   doc: GraphDoc;
   title: string;
+  graphId: string | null;
   tool: Tool;
   selection: Selection;
   dirty: boolean;
@@ -26,14 +27,15 @@ type EditorState = {
 
   commit:(edit: (doc: GraphDoc) => GraphDoc) => void;
   replaceDoc: (doc: GraphDoc) => void;
-  load: (doc: GraphDoc, title?: string) => void;
+  load: (doc: GraphDoc, title?: string, saved?: { graphId: string | null; dirty: boolean }) => void;
+  newGraph: () => void;
   undo: () => void;
   redo: () => void;
 
   setTool: (tool: Tool) => void;
   setSelection: (selection: Selection) => void;
   setTitle: (title: string) => void;
-  markSaved: () => void;
+  markSaved: (graphId: string, saved: { doc: GraphDoc; title: string }) => void;
   toggleFilter: (id: FilterId) => void;
   clearFilters: () => void;
   startRun: (algorithm: AlgorithmId) => void;
@@ -63,6 +65,7 @@ function pruneSelection(sel: Selection, doc: GraphDoc): Selection {
 export const useEditorStore = create<EditorState>()((set) => ({
   doc: emptyGraph(),
   title: "Untitled graph",
+  graphId: null,
   tool: "select",
   selection: noSelection(),
   dirty: false,
@@ -97,16 +100,31 @@ export const useEditorStore = create<EditorState>()((set) => ({
     })),
 
   // a run belongs to the graph it was made from, so a new graph ends it
-  load: (doc, title) =>
+  load: (doc, title, saved) =>
     set((s) => ({
       doc,
       title: title ?? s.title,
+      graphId: saved?.graphId ?? null,
+      past: [],
+      future: [],
+      selection: noSelection(),
+      dirty: saved?.dirty ?? false,
+      run: null,
+    })),
+
+  // a blank canvas that isn't linked to any saved graph
+  newGraph: () =>
+    set({
+      doc: emptyGraph(),
+      title: "Untitled graph",
+      graphId: null,
       past: [],
       future: [],
       selection: noSelection(),
       dirty: false,
+      filters: [],
       run: null,
-    })),
+    }),
 
   undo: () =>
     set((s) => {
@@ -140,7 +158,9 @@ export const useEditorStore = create<EditorState>()((set) => ({
   setTool: (tool) => set({ tool }),
   setSelection: (selection) => set({ selection }),
   setTitle: (title) => set({ title, dirty: true }),
-  markSaved: () => set({ dirty: false }),
+  // edits made while the save was in flight keep the graph dirty
+  markSaved: (graphId, saved) =>
+    set((s) => ({ graphId, dirty: s.doc !== saved.doc || s.title !== saved.title })),
   // turning a filter on drops the selection, so no edit panel stays open
   toggleFilter: (id) =>
     set((s) => {

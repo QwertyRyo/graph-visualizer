@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { removeEdge, removeNode } from "../../domain/graph/ops";
 import { isTyping } from "./keys";
+import { saveToCloud } from "../persistence/cloudSave";
 import { isLocked, useEditorStore } from "../store";
 import { toolForKey } from "./tools";
 
@@ -20,11 +21,20 @@ export function useShortcuts() {
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       // a dialog owns the keyboard while it is open
-      if (isTyping(e) || document.querySelector("dialog[open]")) return;
-      const store = useEditorStore.getState();
-      if (isLocked(store)) return;
+      if (document.querySelector("dialog[open]")) return;
       const key = e.key.toLowerCase();
       const mod = e.metaKey || e.ctrlKey;
+
+      // saving works anywhere, even from the title box or mid-run
+      if (mod && key === "s") {
+        e.preventDefault();
+        void saveToCloud();
+        return;
+      }
+
+      if (isTyping(e)) return;
+      const store = useEditorStore.getState();
+      if (isLocked(store)) return;
 
       if (mod && key === "z") {
         e.preventDefault();

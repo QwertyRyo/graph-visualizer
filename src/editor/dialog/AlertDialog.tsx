@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { dangerPrimaryButton, primaryButton } from "../layout/styles";
 import { useAlertStore } from "./alertStore";
 
 // native dialog gives focus trapping and escape, styled as our own
@@ -32,15 +33,29 @@ export function AlertDialog() {
           {alert?.title}
         </h2>
         <p className="mt-2 text-sm text-slate-600">{alert?.message}</p>
-        <div className="mt-5 flex justify-end">
-          <button
-            type="button"
-            autoFocus
-            onClick={closeAlert}
-            className="border border-ink bg-accent px-4 py-1.5 text-sm font-medium text-white shadow-[2px_2px_0_0_var(--color-ink)] hover:bg-accent-strong active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
-          >
-            OK
-          </button>
+        <div className="mt-5 flex justify-end gap-2">
+          {alert?.confirm ? (
+            <>
+              <button type="button" autoFocus onClick={closeAlert} className="px-4 py-1.5 text-sm hover:bg-slate-100">
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const { onConfirm } = alert.confirm!;
+                  closeAlert();
+                  onConfirm();
+                }}
+                className={alert.confirm.danger ? dangerPrimaryButton : primaryButton}
+              >
+                {alert.confirm.label}
+              </button>
+            </>
+          ) : (
+            <button type="button" autoFocus onClick={closeAlert} className={primaryButton}>
+              OK
+            </button>
+          )}
         </div>
       </div>
     </dialog>

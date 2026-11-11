@@ -1,9 +1,93 @@
 rules_version = '2';
 
+// ===============================================================
+// Assumed Data Model
+// ===============================================================
+//
+// Collection: graphs
+// Document ID: auto-generated
+// Fields:
+//   - ownerId: string (required, immutable) - uid of the user who created it
+//   - title: string (required, 1-120 chars, not blank) - shown in "My graphs"
+//   - data: string (required, 2-900000 chars) - the GraphDoc as JSON; the app
+//       validates its contents with parseGraphDoc when loading
+//   - createdAt: timestamp (required, immutable, server time on create)
+//   - updatedAt: timestamp (required, server time on every write)
+//
+// Every other path is denied.
+// ===============================================================
+
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if false;
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isDocOwner() {
+      return isAuthenticated() && request.auth.uid == resource.data.ownerId;
+    }
+
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    function validStringLength(field, minLen, maxLen) {
+      return request.resource.data[field] is string &&
+        request.resource.data[field].size() >= minLen &&
+        request.resource.data[field].size() <= maxLen;
+    }
+
+    function areImmutableFieldsUnchanged(fields) {
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny(fields);
+    }
+
+    // ===============================================================
+    // Domain Validators (used by both create and update)
+    // ===============================================================
+
+    function isValidGraph() {
+      let fields = ['ownerId', 'title', 'data', 'createdAt', 'updatedAt'];
+      let graph = request.resource.data;
+      return hasRequiredFields(fields) &&
+        hasOnlyAllowedFields(fields) &&
+        graph.ownerId is string &&
+        validStringLength('title', 1, 120) &&
+        graph.title.trim().size() > 0 &&
+        validStringLength('data', 2, 900000) &&
+        graph.createdAt is timestamp &&
+        graph.updatedAt == request.time;
+    }
+
+    // ===============================================================
+    // Graphs: private to their owner
+    // ===============================================================
+
+    match /graphs/{graphId} {
+      // get, and list queries filtered by ownerId == the caller's uid
+      allow read: if isDocOwner();
+
+      allow create: if isOwner(request.resource.data.ownerId) &&
+        isValidGraph() &&
+        request.resource.data.createdAt == request.time;
+
+      allow update: if isDocOwner() &&
+        isValidGraph() &&
+        areImmutableFieldsUnchanged(['ownerId', 'createdAt']);
+
+      allow delete: if isDocOwner();
     }
   }
 }

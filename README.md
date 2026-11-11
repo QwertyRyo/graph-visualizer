@@ -1,75 +1,25 @@
-# React + TypeScript + Vite
+# Work in Progress Graph Visualizer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Try it:** https://graph-visualizer-197db.web.app
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Draw graphs in the browser and step through classic graph algorithms one move at a time to visualize how they work.
 
-## React Compiler
+- **Edit:** add vertices and edges, drag them around, set colours, weights and a root vertex, and switch between directed and undirected graphs.
+- **Run algorithms:** Visualize the processes in the DFS, BFS, Dijkstra, Prim and Kruskal algorithms, played step by step or automatically on the canvas.
+- **Filter:** highlight parts of the graph without editing it.
+- **Import and export:** Graphviz DOT, GraphML and GraphSON files.
+- **Save:** Account functionality with Github, Google and email/password sign-in.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Built with React, TypeScript, Vite, Tailwind CSS, Cytoscape.js and Firebase (Authentication and Cloud Firestore).
 
-## Expanding the ESLint configuration
+## Running locally
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+You need Node.js 24, the [Firebase CLI](https://firebase.google.com/docs/cli) and Java 21 or newer for the Firebase emulators.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```sh
+npm install
+npm run emulators   # terminal 1: local Auth and Firestore
+npm run dev         # terminal 2: the app at http://localhost:5173
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
-```
